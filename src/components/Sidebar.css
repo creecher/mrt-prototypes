@@ -1,0 +1,267 @@
+/* ── Sidebar shell ─────────────────────────────── */
+.sidebar {
+  grid-area: sidebar;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 44px 16px 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: width 0.2s ease;
+  position: relative;
+}
+
+.sidebar--expanded {
+  width: 180px;
+  align-items: flex-start;
+}
+
+.sidebar--collapsed {
+  width: 72px;
+  align-items: center;
+}
+
+/* ── Logo ─────────────────────────────────────── */
+.sidebar__logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 4px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.sidebar__logo-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--mui-palette-background-default);
+  border: 0.8px solid var(--mui-palette-accent-mauve-6, #dbd8e0);
+  border-radius: 8px;
+  flex-shrink: 0;
+  font-size: 14px;
+  color: var(--mui-palette-text-secondary);
+}
+
+.sidebar__logo-text {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  color: var(--mui-palette-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Navigation container ─────────────────────── */
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  padding: 0 4px;
+}
+
+.sidebar--collapsed .sidebar__nav {
+  padding: 0;
+  align-items: center;
+}
+
+/* ── Nav groups ───────────────────────────────── */
+.sidebar__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
+.sidebar--collapsed .sidebar__group {
+  gap: 2px;
+  align-items: center;
+}
+
+/* ── Group header (expanded only) ─────────────── */
+.sidebar__group-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  cursor: default;
+}
+
+.sidebar__group-title {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--mui-palette-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar__group-chevron {
+  font-size: 8px;
+  color: var(--mui-palette-text-secondary);
+}
+
+/* ── Nav button (shared) ──────────────────────── */
+.sidebar__nav-btn {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: inherit;
+  transition: background 0.15s ease;
+  flex-shrink: 0;
+}
+
+.sidebar__nav-btn:hover {
+  background: var(--mui-palette-action-hover);
+}
+
+.sidebar__nav-btn--selected {
+  background: var(--mui-palette-action-selected);
+}
+
+.sidebar__nav-btn--selected:hover {
+  background: var(--mui-palette-action-selected);
+}
+
+/* ── Expanded button ──────────────────────────── */
+.sidebar__nav-btn--expanded {
+  gap: 8px;
+  padding: 0 8px;
+  width: 100%;
+  height: 32px;
+}
+
+.sidebar__nav-btn--expanded i {
+  width: 15px;
+  font-size: 12px;
+  text-align: center;
+  color: var(--mui-palette-text-secondary);
+  flex-shrink: 0;
+}
+
+.sidebar__nav-btn--expanded.sidebar__nav-btn--selected i {
+  color: var(--mui-palette-text-primary);
+}
+
+.sidebar__nav-label {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--mui-palette-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar__nav-btn--selected .sidebar__nav-label {
+  color: var(--mui-palette-text-primary);
+}
+
+/* ── Collapsed button ─────────────────────────── */
+.sidebar__nav-btn--collapsed {
+  width: 32px;
+  height: 32px;
+  justify-content: center;
+  padding: 0;
+}
+
+.sidebar__nav-btn--collapsed i {
+  font-size: 16px;
+  color: var(--mui-palette-text-secondary);
+}
+
+.sidebar__nav-btn--collapsed.sidebar__nav-btn--selected i {
+  color: var(--mui-palette-text-primary);
+}
+
+/* ── Suppress transitions during breakpoint changes ── */
+.sidebar--no-transition,
+.sidebar--no-transition * {
+  transition: none !important;
+}
+
+/* ── Mobile overlay ───────────────────────────── */
+.sidebar-backdrop {
+  display: none;
+}
+
+/* ── Mobile overlay close button ───────────────── */
+.sidebar__close-btn {
+  position: absolute;
+  top: 18px;
+  right: 16px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  cursor: pointer;
+  color: var(--mui-palette-text-secondary);
+  padding: 4px;
+}
+
+.sidebar__close-btn i {
+  font-size: 16px;
+  color: inherit;
+}
+
+.sidebar__close-btn:hover {
+  background: transparent;
+}
+
+.sidebar__close-btn:focus-visible {
+  outline: none;
+}
+
+@media (max-width: 899px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1200;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease, width 0.2s ease;
+    /* Mobile sidebar always shows expanded with white background */
+    width: 290px !important;
+    align-items: flex-start !important;
+    background: var(--mui-palette-background-default);
+  }
+
+  .sidebar__toggle-btn {
+    display: none;
+  }
+
+  .sidebar--mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1199;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .sidebar-backdrop--visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}

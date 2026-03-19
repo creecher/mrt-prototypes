@@ -1,0 +1,67 @@
+.app-shell {
+  display: grid;
+  height: 100vh;
+  grid-template-areas:
+    "sidebar header"
+    "sidebar content";
+  grid-template-rows: auto 1fr;
+  transition: grid-template-columns 0.2s ease;
+  background: linear-gradient(
+    135deg,
+    var(--mui-palette-background-gradientStop1),
+    var(--mui-palette-background-gradientStop2),
+    var(--mui-palette-background-gradientStop3)
+  );
+}
+
+.app-shell--expanded {
+  grid-template-columns: 180px 1fr;
+}
+
+.app-shell--collapsed {
+  grid-template-columns: 72px 1fr;
+}
+
+.app-shell__content {
+  grid-area: content;
+  overflow: hidden;
+  min-height: 0;
+  /* Allow grid column to shrink below table min-content so inner overflow-x can scroll */
+  min-width: 0;
+  padding: 0 8px 8px 0;
+}
+
+.app-shell__surface {
+  background: var(--mui-palette-background-lightestWhite, rgba(255, 255, 255, 0.5));
+  border: 1px solid var(--mui-palette-divider);
+  border-radius: 16px;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Suppress grid transition during breakpoint changes */
+.app-shell--no-transition {
+  transition: none !important;
+}
+
+/* Mobile: sidebar off-screen, full-width content */
+@media (max-width: 899px) {
+  .app-shell {
+    grid-template-areas:
+      "header"
+      "content";
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell--expanded,
+  .app-shell--collapsed {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell__content {
+    padding: 0 8px 8px;
+  }
+}
