@@ -223,7 +223,8 @@
 }
 
 .sidebar__close-btn:focus-visible {
-  outline: none;
+  outline: 2px solid rgba(33, 31, 38, 0.9);
+  outline-offset: 2px;
 }
 
 @media (max-width: 899px) {

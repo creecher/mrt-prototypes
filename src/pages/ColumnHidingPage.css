@@ -12,13 +12,105 @@
   padding: 32px 0 0;
 }
 
+/* Shared horizontal padding for page tabs + table card (matches card inner gutter on XS) */
+.column-hiding-page__main {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/*
+ * Mobile page *section* picker (Tasks / Notes / …) — spacing on this shell only.
+ * Independent from .toolbar-grouping-* (card All/Groups). Do not use margin on FormControl.
+ */
+.column-hiding-page__page-section-select-shell {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  /* Horizontal inset comes from .column-hiding-page__main (same as MuiTabs strip) — no extra here */
+  padding: 0;
+}
+
+.column-hiding-page__page-section-select-shell > .column-hiding-page__page-section-select {
+  margin: 0;
+  width: 100%;
+}
+
+/* --- Page-level tab bar (above table card) --- */
+
+.column-hiding-page__tabs-bar {
+  margin: 0;
+  position: relative;
+  border-bottom: 1px solid var(--mui-palette-divider);
+}
+
+.column-hiding-page__tab-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.column-hiding-page__tab-label i {
+  font-size: 16px;
+}
+
+/* Fade mask on scroller for overflow indication */
+.column-hiding-page__tabs-scroller {
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+.column-hiding-page__tabs-scroller--fade-left {
+  mask-image: linear-gradient(to right, transparent 0, black 40px, black 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 40px, black 100%);
+}
+
+.column-hiding-page__tabs-scroller--fade-right {
+  mask-image: linear-gradient(to right, black 0, black calc(100% - 40px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black 0, black calc(100% - 40px), transparent 100%);
+}
+
+.column-hiding-page__tabs-scroller--fade-both {
+  mask-image: linear-gradient(to right, transparent 0, black 40px, black calc(100% - 40px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 40px, black calc(100% - 40px), transparent 100%);
+}
+
+/* Mobile page section FormControl — spacing is on .page-section-select-shell */
+.column-hiding-page__page-section-select {
+  margin: 0;
+  width: 100%;
+}
+
+/* Card toolbar: All/Groups select — separate BEM from .page-section-select */
+.column-hiding-page__toolbar-wrapper .column-hiding-page__toolbar-grouping-select {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* Placeholder content for non-tasks tabs */
+.column-hiding-page__tab-placeholder {
+  margin: 0 0 32px;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--mui-palette-text-secondary);
+  font-family: Figtree, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 16px;
+  border: 1px dashed var(--mui-palette-divider);
+}
+
 .column-hiding-page__table-container {
   display: flex;
   flex-direction: column;
   gap: 16px;
   min-width: 0;
   padding: 16px;
-  margin: 0 32px 32px;
+  margin: 0 0 32px;
   border-radius: 16px;
   border: 1px solid var(--mui-palette-divider);
   background: rgba(255, 255, 255, 0.5);
@@ -119,13 +211,19 @@
   font-size: 16px;
 }
 
-/* --- Tabs --- */
+/* Toolbar row: All/Groups dropdown or Groups|All toggles (not the page section picker) */
 
-.column-hiding-page__tabs {
+.column-hiding-page__toolbar-grouping-row {
   display: flex;
 }
 
-.column-hiding-page__tabs-select {
+.column-hiding-page__toolbar-wrapper--compact,
+.column-hiding-page__toolbar-grouping-row {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.column-hiding-page__toolbar-grouping-select {
   width: 100%;
 }
 
@@ -188,6 +286,12 @@
 
 .column-hiding-page__toolbar .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
   border-color: transparent;
+}
+
+.column-hiding-page__toolbar .MuiOutlinedInput-root.Mui-focused {
+  outline: 2px solid rgba(33, 31, 38, 0.9);
+  outline-offset: 1px;
+  border-radius: 8px;
 }
 
 .column-hiding-page__toolbar .MuiInputBase-input {
@@ -333,10 +437,24 @@
     padding: 16px 0 0;
   }
 
+  .column-hiding-page__main {
+    padding: 0 16px;
+  }
+
+  .column-hiding-page__tab-placeholder {
+    margin: 0 0 16px;
+  }
+
   .column-hiding-page__table-container {
-    padding: 12px;
+    padding: 16px;
     gap: 12px;
-    margin: 0 16px 16px;
+    margin: 0 0 16px;
+  }
+
+  .column-hiding-page__table-scroll {
+    padding-left: 0;
+    padding-right: 0;
+    box-sizing: border-box;
   }
 
   .column-hiding-page__toolbar-wrapper {

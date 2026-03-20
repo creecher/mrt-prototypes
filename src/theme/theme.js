@@ -13,6 +13,15 @@ const baseTheme = createTheme({
       defaultProps: {
         disableRipple: true,
       },
+      styleOverrides: {
+        root: {
+          '&:focus-visible': {
+            outline: '2px solid rgba(33, 31, 38, 0.9)',
+            outlineOffset: '2px',
+            borderRadius: 'inherit',
+          },
+        },
+      },
     },
     MuiCheckbox: {
       defaultProps: {
@@ -22,6 +31,11 @@ const baseTheme = createTheme({
       },
       styleOverrides: {
         root: ({ theme }) => ({
+          '&.Mui-focusVisible': {
+            outline: '2px solid rgba(33, 31, 38, 0.9)',
+            outlineOffset: '2px',
+            borderRadius: '6px',
+          },
           // Match 16px glyph; default MUI is 24px with 9px padding.
           padding: 6,
           // Outline icon is a filled path using `currentColor`; hide it so only the
@@ -69,6 +83,11 @@ const baseTheme = createTheme({
       },
     },
     MuiSwitch: {
+      defaultProps: {
+        disableRipple: true,
+      },
+    },
+    MuiTab: {
       defaultProps: {
         disableRipple: true,
       },

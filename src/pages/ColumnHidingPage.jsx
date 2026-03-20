@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useRef, useCallback } from 'react'
 import {
   MaterialReactTable,
   useMaterialReactTable,
@@ -11,11 +11,15 @@ import {
   Button,
   FormControl,
   InputAdornment,
+  InputLabel,
   MenuItem,
   Select,
+  Tab,
+  Tabs,
   ToggleButton,
   ToggleButtonGroup,
   useMediaQuery,
+  useTheme,
 } from '@mui/material'
 import { TASK_DATA, STATUS_COLORS, TASK_TYPE_CHIP_STYLES } from '../data/taskData'
 import './ColumnHidingPage.css'
@@ -82,17 +86,53 @@ function getVisibilityForBreakpoint(isMd, isLg) {
   }
 }
 
+const PAGE_TABS = [
+  { value: 'tasks', icon: 'fa-regular fa-list-check', label: 'Tasks' },
+  { value: 'notes', icon: 'fa-regular fa-memo-pad', label: 'Notes' },
+  { value: 'documents', icon: 'fa-regular fa-files', label: 'Documents' },
+  { value: 'outgoing-referrals', icon: 'fa-regular fa-phone-arrow-up-right', label: 'Outgoing referrals' },
+  { value: 'team', icon: 'fa-regular fa-people-group', label: 'Team' },
+]
+
 export default function ColumnHidingPage() {
+  const theme = useTheme()
   const isMd = useMediaQuery('(min-width: 900px)')
   const isLg = useMediaQuery('(min-width: 1200px)')
   /** XS–MD: compact toolbar (select tabs, icon filters, full-width search row); LG+ gets full controls */
   const isCompactToolbar = useMediaQuery('(max-width: 1199px)')
+  /** Must match theme breakpoint `sm` (600px) so Tabs vs section Select switch aligns with MUI/CSS */
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const [columnVisibility, setColumnVisibility] = useState(() =>
     getVisibilityForBreakpoint(isMd, isLg)
   )
   const [rowSelection, setRowSelection] = useState({})
   const [tabValue, setTabValue] = useState('all')
+  const [activeTab, setActiveTab] = useState('tasks')
+
+  // Fade indicators for scrollable tabs
+  const scrollerRef = useRef(null)
+  const [showLeftFade, setShowLeftFade] = useState(false)
+  const [showRightFade, setShowRightFade] = useState(false)
+
+  const updateFades = useCallback(() => {
+    const el = scrollerRef.current
+    if (!el) return
+    setShowLeftFade(el.scrollLeft > 0)
+    setShowRightFade(el.scrollLeft + el.clientWidth < el.scrollWidth - 1)
+  }, [])
+
+  useEffect(() => {
+    const el = scrollerRef.current
+    if (!el) return
+    updateFades()
+    el.addEventListener('scroll', updateFades, { passive: true })
+    window.addEventListener('resize', updateFades)
+    return () => {
+      el.removeEventListener('scroll', updateFades)
+      window.removeEventListener('resize', updateFades)
+    }
+  }, [updateFades, isMobile])
 
   useEffect(() => {
     setColumnVisibility(getVisibilityForBreakpoint(isMd, isLg))
@@ -430,10 +470,145 @@ export default function ColumnHidingPage() {
     },
   })
 
+  const fadeClass = showLeftFade && showRightFade
+    ? 'column-hiding-page__tabs-scroller--fade-both'
+    : showLeftFade
+      ? 'column-hiding-page__tabs-scroller--fade-left'
+      : showRightFade
+        ? 'column-hiding-page__tabs-scroller--fade-right'
+        : ''
+
   return (
     <div className="column-hiding-page">
-      <div className="column-hiding-page__table-container">
-        <MaterialReactTable table={table} />
+      <div className="column-hiding-page__main">
+      {/* Page-level tabs (above table card) */}
+      {isMobile ? (
+        <div className="column-hiding-page__page-section-select-shell">
+        <FormControl fullWidth size="small" className="column-hiding-page__page-section-select">
+          <InputLabel id="page-section-label" sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
+            Section
+          </InputLabel>
+          <Select
+            labelId="page-section-label"
+            value={activeTab}
+            onChange={(e) => setActiveTab(e.target.value)}
+            IconComponent={() => (
+              <i
+                className="fa-solid fa-chevron-down"
+                style={{
+                  fontSize: 12,
+                  color: 'var(--mui-palette-text-secondary)',
+                  marginRight: 12,
+                }}
+              />
+            )}
+            sx={{
+              borderRadius: '8px',
+              backgroundColor: TOOLBAR_CONTROL_BG,
+              boxShadow: TOOLBAR_CONTROL_SHADOW,
+              minHeight: 36,
+              height: 36,
+              '& .MuiSelect-select': {
+                fontFamily: 'Figtree, sans-serif',
+                fontSize: '1rem',
+                fontWeight: 600,
+                lineHeight: '24px',
+                color: 'var(--mui-palette-text-primary)',
+                padding: '6px 36px 6px 12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              },
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' },
+              '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' },
+              '&.Mui-focused': {
+                outline: '2px solid rgba(33, 31, 38, 0.9)',
+                outlineOffset: '1px',
+              },
+            }}
+          >
+            {PAGE_TABS.map((t) => (
+              <MenuItem key={t.value} value={t.value}>
+                <i className={t.icon} style={{ fontSize: 16, marginRight: 8 }} />
+                {t.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        </div>
+      ) : (
+        <div className="column-hiding-page__tabs-bar">
+          <Tabs
+            value={activeTab}
+            onChange={(e, v) => setActiveTab(v)}
+            variant="scrollable"
+            scrollButtons={false}
+            TabIndicatorProps={{ sx: { backgroundColor: 'text.primary', height: 2 } }}
+            sx={{
+              minHeight: 36,
+              '& .MuiTabs-flexContainer': { gap: 0 },
+              '& .MuiTab-root': {
+                position: 'relative',
+                minHeight: 36,
+                padding: '0 8px',
+                textTransform: 'none',
+                fontFamily: 'Figtree, sans-serif',
+                fontSize: '1rem',
+                fontWeight: 600,
+                lineHeight: '24px',
+                color: 'text.secondary',
+                '&.Mui-selected': { color: 'text.primary' },
+                // Hover: same 2px bottom line as the active indicator, divider.default
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  height: 2,
+                  backgroundColor: (theme) => theme.palette.divider,
+                  opacity: 0,
+                  pointerEvents: 'none',
+                  transition: 'opacity 0.15s ease',
+                },
+                '&:hover:not(.Mui-selected)::after': {
+                  opacity: 1,
+                },
+              },
+            }}
+            slotProps={{
+              scroller: {
+                ref: scrollerRef,
+                className: `column-hiding-page__tabs-scroller ${fadeClass}`,
+              },
+            }}
+          >
+            {PAGE_TABS.map((t) => (
+              <Tab
+                key={t.value}
+                value={t.value}
+                label={
+                  <span className="column-hiding-page__tab-label">
+                    <i className={t.icon} />
+                    {t.label}
+                  </span>
+                }
+              />
+            ))}
+          </Tabs>
+        </div>
+      )}
+
+      {activeTab === 'tasks' ? (
+        <div className="column-hiding-page__table-container">
+          <MaterialReactTable table={table} />
+        </div>
+      ) : (
+        <div className="column-hiding-page__tab-placeholder">
+          {PAGE_TABS.find((t) => t.value === activeTab)?.label}
+        </div>
+      )}
       </div>
     </div>
   )
@@ -441,7 +616,14 @@ export default function ColumnHidingPage() {
 
 function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar }) {
   return (
-    <div className="column-hiding-page__toolbar-wrapper">
+    <div
+      className={
+        isCompactToolbar
+          ? 'column-hiding-page__toolbar-wrapper column-hiding-page__toolbar-wrapper--compact'
+          : 'column-hiding-page__toolbar-wrapper'
+      }
+      style={{ paddingLeft: 0, paddingRight: 0 }}
+    >
       {/* Row 1: Page header */}
       <div className="column-hiding-page__header">
         <h2 className="column-hiding-page__title">
@@ -479,10 +661,10 @@ function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar }) {
         </div>
       </div>
 
-      {/* Row 2: Tabs */}
-      <div className="column-hiding-page__tabs">
+      {/* Row 2: All/Groups (compact) or toggle (wide) */}
+      <div className="column-hiding-page__toolbar-grouping-row" style={{ paddingLeft: 0, paddingRight: 0 }}>
         {isCompactToolbar ? (
-          <FormControl size="small" className="column-hiding-page__tabs-select">
+          <FormControl size="small" className="column-hiding-page__toolbar-grouping-select">
             <Select
               value={tabValue}
               onChange={(event) => onTabChange(event.target.value)}
@@ -522,6 +704,10 @@ function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar }) {
                 },
                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                   borderColor: 'transparent',
+                },
+                '&.Mui-focused': {
+                  outline: '2px solid rgba(33, 31, 38, 0.9)',
+                  outlineOffset: '1px',
                 },
               }}
             >
