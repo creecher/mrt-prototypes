@@ -30,7 +30,7 @@ const TOOLBAR_CONTROL_SHADOW =
   '0px 0px 0px 1px var(--mui-palette-component-input-dividerDefault, rgba(20,0,53,0.15)), 0px 1px 3px 0px rgba(33,31,38,0.1), 0px 1px 2px -1px rgba(33,31,38,0.1)'
 const SHADOW_EDGE_GUTTER = '2px'
 
-/** Full table “card” (thead + tbody) — lives on TableContainer; tbody box-shadow is unreliable */
+/** White card wrapping only the data rows (tbody). thead sits outside on the page background. */
 const TABLE_CARD_SHADOW =
   '0 0 0 1px rgba(32, 0, 56, 0.10), 0 1px 3px 0 rgba(33, 31, 38, 0.10), 0 1px 2px -1px rgba(33, 31, 38, 0.10)'
 
@@ -385,14 +385,12 @@ export default function ColumnHidingPage() {
     muiTableContainerProps: {
       className: 'column-hiding-page__table-scroll',
       sx: {
-        backgroundColor: '#FFF',
-        boxShadow: TABLE_CARD_SHADOW,
+        backgroundColor: 'transparent',
+        boxShadow: 'none',
         maxWidth: '100%',
-        // Single overflow region: thead + tbody scroll together, clipped at card edge (see mockup).
         overflowX: 'auto',
         overflowY: 'visible',
         WebkitOverflowScrolling: 'touch',
-        borderRadius: '12px',
       },
     },
     muiTableProps: {
@@ -402,12 +400,22 @@ export default function ColumnHidingPage() {
         width: '100%',
       },
     },
+    // MRT defaults thead row to mrtTheme.baseBackgroundColor (page grey). We want headers
+    // flush with the surrounding card like the spec (no filled header band).
+    muiTableHeadRowProps: {
+      sx: {
+        backgroundColor: 'transparent',
+        boxShadow: 'none',
+      },
+    },
     // thead/tbody use default display (table-header-group / table-row-group) so
     // column widths stay aligned — avoid tbody `display: block` + row `display: table`.
     muiTableBodyProps: {
       sx: {
-        // Background + shadow on tbody are unreliable for table layout; card chrome is on TableContainer.
-        backgroundColor: 'transparent',
+        backgroundColor: '#FFF',
+        borderRadius: '12px',
+        boxShadow: TABLE_CARD_SHADOW,
+        overflow: 'hidden',
       },
     },
     muiTableHeadCellProps: {

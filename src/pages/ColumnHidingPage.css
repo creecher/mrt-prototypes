@@ -411,11 +411,17 @@
   margin-left: -10px;
 }
 
-/* Keep header visually outside the white rows card. */
+/* Keep header visually outside the white rows card (card chrome is on tbody). */
 .column-hiding-page .MuiTableHead-root,
 .column-hiding-page .MuiTableHead-root .MuiTableRow-root,
 .column-hiding-page .MuiTableHead-root .MuiTableCell-head {
   background: transparent !important;
+}
+
+/* Ensure the tbody card doesn't get overridden by MRT row-level box-shadow resets. */
+.column-hiding-page .MuiTableBody-root {
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 /* Prevent MRT/MUI cell overlays from darkening selected rows. */
