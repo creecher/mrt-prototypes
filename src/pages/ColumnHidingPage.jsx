@@ -389,8 +389,10 @@ export default function ColumnHidingPage() {
         boxShadow: 'none',
         maxWidth: '100%',
         overflowX: 'auto',
-        overflowY: 'visible',
         WebkitOverflowScrolling: 'touch',
+        // Padding gives the tbody card shadow room to render inside the scroll area
+        // without being clipped by overflow-x: auto.
+        padding: '0 4px 5px',
       },
     },
     muiTableProps: {
