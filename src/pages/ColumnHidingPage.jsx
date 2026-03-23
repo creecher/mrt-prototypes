@@ -8,6 +8,7 @@ import {
 import {
   Avatar,
   AvatarGroup,
+  Badge,
   Button,
   FormControl,
   InputAdornment,
@@ -23,6 +24,7 @@ import {
 } from '@mui/material'
 import { TASK_DATA, STATUS_COLORS, TASK_TYPE_CHIP_STYLES } from '../data/taskData'
 import RightSidebar from '../components/RightSidebar'
+import FiltersDrawer from '../components/FiltersDrawer'
 import './ColumnHidingPage.css'
 
 const TOOLBAR_CONTROL_BG = 'var(--mui-palette-background-paperElevation3, white)'
@@ -57,7 +59,7 @@ function FaViewColumnIcon() {
   // Matches the Font Awesome glyph name seen in the Figma spec ("columns-3").
   return (
     <i
-      className="fa-solid fa-columns-3"
+      className="fa-regular fa-columns-3"
       style={{ fontSize: 14, color: 'var(--mui-palette-text-secondary)' }}
     />
   )
@@ -110,6 +112,33 @@ export default function ColumnHidingPage() {
   const [rowSelection, setRowSelection] = useState({})
   const [tabValue, setTabValue] = useState('all')
   const [activeTab, setActiveTab] = useState('tasks')
+  const [filtersOpen, setFiltersOpen] = useState(false)
+
+  // Filter state (drives bottom drawer at compact breakpoints)
+  const [filterTaskTypes, setFilterTaskTypes] = useState([])
+  const [filterAssignees, setFilterAssignees] = useState([])
+  const [filterStatuses, setFilterStatuses] = useState([])
+
+  const taskTypeOptions = useMemo(() => [...new Set(TASK_DATA.map((r) => r.taskType))], [])
+  const assigneeOptions = useMemo(() => [...new Set(TASK_DATA.flatMap((r) => r.assignees))].sort(), [])
+  const statusOptions = useMemo(() => ['Not started', 'In progress'], [])
+
+  const activeFilterCount = [filterTaskTypes, filterAssignees, filterStatuses].filter((a) => a.length > 0).length
+
+  const filteredData = useMemo(() => {
+    return TASK_DATA.filter((row) => {
+      if (filterTaskTypes.length && !filterTaskTypes.includes(row.taskType)) return false
+      if (filterAssignees.length && !row.assignees.some((a) => filterAssignees.includes(a))) return false
+      if (filterStatuses.length && !filterStatuses.includes(row.taskStatus)) return false
+      return true
+    })
+  }, [filterTaskTypes, filterAssignees, filterStatuses])
+
+  const handleResetFilters = useCallback(() => {
+    setFilterTaskTypes([])
+    setFilterAssignees([])
+    setFilterStatuses([])
+  }, [])
 
   // Fade indicators for scrollable tabs
   const scrollerRef = useRef(null)
@@ -309,7 +338,7 @@ export default function ColumnHidingPage() {
 
   const table = useMaterialReactTable({
     columns,
-    data: TASK_DATA,
+    data: filteredData,
     // Grid layout: checkbox column stays narrow (grow: false); Task and other
     // columns use flex so extra width goes to content columns — not empty space
     // beside the checkbox when only one data column is visible.
@@ -356,6 +385,8 @@ export default function ColumnHidingPage() {
         tabValue={tabValue}
         onTabChange={setTabValue}
         isCompactToolbar={isCompactToolbar}
+        onFiltersOpen={() => setFiltersOpen(true)}
+        activeFilterCount={activeFilterCount}
       />
     ),
     enableBottomToolbar: false,
@@ -623,11 +654,26 @@ export default function ColumnHidingPage() {
       )}
       </div>
       <RightSidebar />
+      <FiltersDrawer
+        open={filtersOpen}
+        onClose={() => setFiltersOpen(false)}
+        filterTaskTypes={filterTaskTypes}
+        setFilterTaskTypes={setFilterTaskTypes}
+        taskTypeOptions={taskTypeOptions}
+        filterAssignees={filterAssignees}
+        setFilterAssignees={setFilterAssignees}
+        assigneeOptions={assigneeOptions}
+        filterStatuses={filterStatuses}
+        setFilterStatuses={setFilterStatuses}
+        statusOptions={statusOptions}
+        activeFilterCount={activeFilterCount}
+        onReset={handleResetFilters}
+      />
     </div>
   )
 }
 
-function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar }) {
+function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar, onFiltersOpen, activeFilterCount }) {
   return (
     <div
       className={
@@ -793,24 +839,42 @@ function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar }) {
         </div>
         <div className="column-hiding-page__toolbar-filters">
           {isCompactToolbar && (
-            <Button
-              variant="outlined"
-              size="small"
+            <Badge
+              variant="dot"
+              invisible={activeFilterCount === 0}
+              overlap="circular"
               sx={{
-                border: '1px solid transparent',
-                backgroundColor: TOOLBAR_CONTROL_BG,
-                borderRadius: TOOLBAR_CONTROL_RADIUS,
-                height: 28,
-                width: 28,
-                minWidth: 'auto',
-                padding: 0,
-                color: 'var(--mui-palette-text-secondary)',
-                boxShadow: TOOLBAR_CONTROL_SHADOW,
-                '&:hover': { backgroundColor: TOOLBAR_CONTROL_BG },
+                '& .MuiBadge-badge': {
+                  backgroundColor: 'var(--mui-palette-text-primary, rgba(2, 0, 10, 0.88))',
+                  width: 8,
+                  height: 8,
+                  minWidth: 8,
+                  borderRadius: '50%',
+                  top: 2,
+                  right: 2,
+                },
               }}
             >
-              <i className="fa-solid fa-filter" style={{ fontSize: 12 }} />
-            </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={onFiltersOpen}
+                sx={{
+                  border: '1px solid transparent',
+                  backgroundColor: TOOLBAR_CONTROL_BG,
+                  borderRadius: TOOLBAR_CONTROL_RADIUS,
+                  height: 28,
+                  width: 28,
+                  minWidth: 'auto',
+                  padding: 0,
+                  color: 'var(--mui-palette-text-secondary)',
+                  boxShadow: TOOLBAR_CONTROL_SHADOW,
+                  '&:hover': { backgroundColor: TOOLBAR_CONTROL_BG },
+                }}
+              >
+                <i className="fa-regular fa-filters" style={{ fontSize: 12 }} />
+              </Button>
+            </Badge>
           )}
           {!isCompactToolbar && (
           <Button

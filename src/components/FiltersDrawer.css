@@ -1,0 +1,272 @@
+/* FiltersDrawer — bottom-sliding drawer for filters (MD/SM/XS) */
+
+.filters-drawer.MuiDrawer-paper {
+  border-radius: 16px 16px 0 0;
+  max-height: 85vh;
+  background-color: #fff;
+  padding: 24px 24px 32px;
+  box-sizing: border-box;
+  box-shadow:
+    0 -4px 24px 0 rgba(33, 31, 38, 0.12),
+    0 0 0 1px var(--mui-palette-divider, rgba(32, 0, 56, 0.10));
+}
+
+/* --- Header --- */
+
+.filters-drawer__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 20px;
+}
+
+.filters-drawer__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.filters-drawer__title {
+  font-family: Figtree, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+  letter-spacing: -0.06px;
+  color: var(--mui-palette-text-primary, rgba(2, 0, 10, 0.88));
+  margin: 0;
+}
+
+.filters-drawer__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background-color: var(--mui-palette-text-primary, rgba(2, 0, 10, 0.88));
+  color: #fff;
+  font-family: Figtree, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.filters-drawer__reset-btn {
+  font-family: Figtree, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0.01em;
+  color: var(--mui-palette-text-primary, rgba(2, 0, 10, 0.88));
+  background: transparent;
+  border: 1px solid var(--mui-palette-divider, rgba(32, 0, 56, 0.10));
+  border-radius: 12px;
+  padding: 6px 12px;
+  height: 32px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.filters-drawer__reset-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.filters-drawer__close-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--mui-palette-text-primary, rgba(2, 0, 10, 0.88));
+  flex-shrink: 0;
+  font-size: 18px;
+  padding: 0;
+}
+
+.filters-drawer__close-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* --- Body --- */
+
+.filters-drawer__body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* --- Field --- */
+
+.filters-drawer__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filters-drawer__label {
+  font-family: Figtree, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--mui-palette-text-primary, rgba(2, 0, 10, 0.88));
+}
+
+/* --- Autocomplete --- */
+
+.filters-drawer__autocomplete .MuiOutlinedInput-root {
+  border-radius: 8px;
+  font-family: Figtree, sans-serif;
+  font-size: 14px;
+  padding: 6px 8px !important;
+  min-height: 40px;
+}
+
+.filters-drawer__autocomplete .MuiOutlinedInput-notchedOutline {
+  border-color: var(--mui-palette-divider, rgba(32, 0, 56, 0.10));
+}
+
+.filters-drawer__autocomplete .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: var(--mui-palette-text-secondary);
+}
+
+.filters-drawer__autocomplete .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(33, 31, 38, 0.9);
+  border-width: 2px;
+}
+
+.filters-drawer__autocomplete .MuiInputBase-input::placeholder {
+  color: var(--mui-palette-text-secondary, rgba(4, 0, 15, 0.61));
+  opacity: 1;
+  font-family: Figtree, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+/* Chevron popup icon */
+.filters-drawer__autocomplete .MuiAutocomplete-popupIndicator {
+  padding: 4px;
+  margin-right: 2px;
+}
+
+/* Hide clear icon — users delete chips individually */
+.filters-drawer__autocomplete .MuiAutocomplete-clearIndicator {
+  display: none;
+}
+
+/* --- Chips --- */
+
+.filters-drawer__chip.MuiChip-root {
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--mui-palette-divider, rgba(32, 0, 56, 0.10));
+  background-color: var(--mui-palette-background-paperElevation3, #fff);
+  font-family: Figtree, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--mui-palette-text-primary, rgba(2, 0, 10, 0.88));
+}
+
+.filters-drawer__chip .MuiChip-deleteIcon {
+  color: var(--mui-palette-text-secondary, rgba(4, 0, 15, 0.61));
+  font-size: 12px;
+  margin-right: 6px;
+}
+
+.filters-drawer__chip .MuiChip-deleteIcon:hover {
+  color: var(--mui-palette-text-primary);
+}
+
+/* Task type chip icon */
+.filters-drawer__chip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+/* --- Dropdown option rows --- */
+
+.filters-drawer__option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  font-family: Figtree, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--mui-palette-text-primary, rgba(2, 0, 10, 0.88));
+  cursor: pointer;
+}
+
+.filters-drawer__option:hover {
+  background-color: var(--mui-palette-action-hover, rgba(0, 0, 0, 0.04));
+}
+
+.filters-drawer__option[aria-selected='true'] {
+  background-color: var(--mui-palette-action-selected, rgba(0, 0, 0, 0.08));
+}
+
+/* Task type option icon badge */
+.filters-drawer__option-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.filters-drawer__option-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Status option with checkbox */
+.filters-drawer__option--status {
+  gap: 6px;
+}
+
+/* --- Status dot (shared by options and chips) --- */
+
+.filters-drawer__status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.filters-drawer__status-chip-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --- Dropdown paper --- */
+
+.filters-drawer__autocomplete + .MuiAutocomplete-popper .MuiPaper-root,
+.MuiAutocomplete-popper .MuiPaper-root {
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px var(--mui-palette-divider, rgba(32, 0, 56, 0.10)),
+    0 4px 16px 0 rgba(33, 31, 38, 0.12);
+  margin-top: 4px;
+}
