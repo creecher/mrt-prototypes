@@ -25,6 +25,8 @@ import {
 import { TASK_DATA, STATUS_COLORS, TASK_TYPE_CHIP_STYLES } from '../data/taskData'
 import RightSidebar from '../components/RightSidebar'
 import FiltersDrawer from '../components/FiltersDrawer'
+import BulkEditActionBar from '../components/BulkEditActionBar'
+import BulkEditDrawer from '../components/BulkEditDrawer'
 import './ColumnHidingPage.css'
 
 const TOOLBAR_CONTROL_BG = 'var(--mui-palette-background-paperElevation3, white)'
@@ -105,6 +107,8 @@ export default function ColumnHidingPage() {
   const isCompactToolbar = useMediaQuery('(max-width: 1199px)')
   /** Must match theme breakpoint `sm` (600px) so Tabs vs section Select switch aligns with MUI/CSS */
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  /** SM/XS: bulk edit uses bottom sheet; MD+ uses floating bar */
+  const isMobileBulkEdit = useMediaQuery(theme.breakpoints.down('md'))
 
   const [columnVisibility, setColumnVisibility] = useState(() =>
     getVisibilityForBreakpoint(isMd, isLg)
@@ -124,6 +128,8 @@ export default function ColumnHidingPage() {
   const statusOptions = useMemo(() => ['Not started', 'In progress'], [])
 
   const activeFilterCount = [filterTaskTypes, filterAssignees, filterStatuses].filter((a) => a.length > 0).length
+  const selectedCount = Object.keys(rowSelection).length
+  const handleClearSelection = useCallback(() => setRowSelection({}), [])
 
   const filteredData = useMemo(() => {
     return TASK_DATA.filter((row) => {
@@ -669,6 +675,16 @@ export default function ColumnHidingPage() {
         activeFilterCount={activeFilterCount}
         onReset={handleResetFilters}
       />
+      {selectedCount > 0 && !isMobileBulkEdit && (
+        <BulkEditActionBar selectedCount={selectedCount} onClose={handleClearSelection} />
+      )}
+      {isMobileBulkEdit && (
+        <BulkEditDrawer
+          open={selectedCount > 0}
+          selectedCount={selectedCount}
+          onClose={handleClearSelection}
+        />
+      )}
     </div>
   )
 }
