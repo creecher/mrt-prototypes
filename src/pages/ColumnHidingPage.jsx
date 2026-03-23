@@ -22,6 +22,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { TASK_DATA, STATUS_COLORS, TASK_TYPE_CHIP_STYLES } from '../data/taskData'
+import RightSidebar from '../components/RightSidebar'
 import './ColumnHidingPage.css'
 
 const TOOLBAR_CONTROL_BG = 'var(--mui-palette-background-paperElevation3, white)'
@@ -491,6 +492,7 @@ export default function ColumnHidingPage() {
   return (
     <div className="column-hiding-page">
       <div className="column-hiding-page__main">
+
       {/* Page-level tabs (above table card) */}
       {isMobile ? (
         <div className="column-hiding-page__page-section-select-shell">
@@ -620,6 +622,7 @@ export default function ColumnHidingPage() {
         </div>
       )}
       </div>
+      <RightSidebar />
     </div>
   )
 }
