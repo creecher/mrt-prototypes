@@ -107,6 +107,12 @@
   color: var(--mui-palette-text-secondary);
 }
 
+/* ── Nav link reset (NavLink renders <a>) ────── */
+a.sidebar__nav-btn {
+  text-decoration: none;
+  color: inherit;
+}
+
 /* ── Nav button (shared) ──────────────────────── */
 .sidebar__nav-btn {
   display: flex;

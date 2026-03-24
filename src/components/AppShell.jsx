@@ -6,7 +6,6 @@ import './AppShell.css'
 export default function AppShell({ children }) {
   const [sidebarExpanded, setSidebarExpanded] = useState(() => window.matchMedia('(min-width: 1536px)').matches)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [activeItem, setActiveItem] = useState('home')
   const [suppressTransition, setSuppressTransition] = useState(false)
   const wasMobileRef = useRef(window.matchMedia('(max-width: 899px)').matches)
 
@@ -62,8 +61,6 @@ export default function AppShell({ children }) {
         mobileOpen={mobileOpen}
         onCloseMobile={handleCloseMobile}
         suppressTransition={suppressTransition}
-        activeItem={activeItem}
-        onNavigate={setActiveItem}
       />
       <Header onMenuClick={handleMenuClick} />
       <main className="app-shell__content">
