@@ -184,6 +184,18 @@
   color: var(--mui-palette-text-primary);
 }
 
+/* Toggle: icon-only, square in expanded sidebar (not full-width row) */
+.sidebar__toggle-btn.sidebar__nav-btn--expanded {
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  padding: 0;
+  justify-content: center;
+  gap: 0;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
 /* ── Suppress transitions during breakpoint changes ── */
 .sidebar--no-transition,
 .sidebar--no-transition * {

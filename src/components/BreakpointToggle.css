@@ -1,7 +1,8 @@
 .bp-toggle {
   position: fixed;
   top: 16px;
-  left: 16px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -13,6 +14,18 @@
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 
+.bp-toggle--compact {
+  gap: 6px;
+  padding: 3px 4px 3px 8px;
+  border-radius: 16px;
+}
+
+.bp-toggle__compact-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .bp-toggle__pill {
   color: rgba(255, 255, 255, 0.35);
   font-size: 12px;
@@ -22,6 +35,11 @@
   border-radius: 16px;
   white-space: nowrap;
   transition: background 0.15s, color 0.15s;
+}
+
+.bp-toggle--compact .bp-toggle__pill {
+  padding: 4px 8px;
+  font-size: 11px;
 }
 
 .bp-toggle__pill--active {
@@ -37,4 +55,38 @@
   padding: 0 8px 0 4px;
   border-left: 1px solid rgba(255, 255, 255, 0.15);
   margin-left: 2px;
+}
+
+.bp-toggle__width--compact {
+  padding: 0 2px 0 0;
+  margin-left: 0;
+  border-left: none;
+  font-size: 10px;
+}
+
+.bp-toggle__minimize-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 1;
+  transition: color 0.15s, background 0.15s;
+}
+
+.bp-toggle__minimize-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.bp-toggle__minimize-btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 2px;
 }

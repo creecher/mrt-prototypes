@@ -253,7 +253,7 @@
 
 /* --- Toolbar search input (matches outlined buttons) --- */
 .column-hiding-page__toolbar .MuiTextField-root {
-  width: 260px;
+  width: 200px;
   height: 28px;
   background-color: var(--mui-palette-background-paperElevation3, white);
   border-radius: 8px;
@@ -482,7 +482,7 @@
     min-width: 0;
   }
 
-  /* Horizontal Collapse otherwise shrink-wraps to the 260px input */
+  /* Horizontal Collapse otherwise shrink-wraps to the 200px input */
   .column-hiding-page__toolbar-search .MuiCollapse-root {
     width: 100% !important;
   }

@@ -133,8 +133,7 @@ export default function Sidebar({ expanded, onToggleExpanded, mobileOpen, onClos
               onClick={onToggleExpanded}
               aria-label={expanded ? 'Collapse menu' : 'Expand menu'}
             >
-              <i className={`fa-regular ${expanded ? 'fa-compress-wide' : 'fa-expand-wide'}`} />
-              {showExpanded && <span className="sidebar__nav-label">Hide menu</span>}
+              <i className="fa-regular fa-sidebar" aria-hidden="true" />
             </button>
             <button
               className={`sidebar__nav-btn ${showExpanded ? 'sidebar__nav-btn--expanded' : 'sidebar__nav-btn--collapsed'} ${isSelected('home') ? 'sidebar__nav-btn--selected' : ''}`}
