@@ -289,6 +289,10 @@
   border-color: transparent;
 }
 
+.column-hiding-page__toolbar .MuiTextField-root:has(.Mui-focused) {
+  box-shadow: none;
+}
+
 .column-hiding-page__toolbar .MuiOutlinedInput-root.Mui-focused {
   outline: 2px solid rgba(33, 31, 38, 0.9);
   outline-offset: 1px;

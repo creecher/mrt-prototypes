@@ -572,6 +572,7 @@ export default function ColumnHidingPage() {
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' },
               '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' },
               '&.Mui-focused': {
+                boxShadow: 'none',
                 outline: '2px solid rgba(33, 31, 38, 0.9)',
                 outlineOffset: '1px',
               },
@@ -709,7 +710,7 @@ function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar, onFilte
           <span className="column-hiding-page__title-avatar" aria-hidden="true">
             <i className="fa-solid fa-list-check column-hiding-page__title-avatar-icon" />
           </span>
-          <span className="column-hiding-page__title-text">Tasks</span>
+          <span className="column-hiding-page__title-text">Strategy 1: Column Hiding by Breakpoint</span>
         </h2>
         <div className="column-hiding-page__header-buttons">
           <Button
@@ -785,6 +786,7 @@ function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar, onFilte
                   borderColor: 'transparent',
                 },
                 '&.Mui-focused': {
+                  boxShadow: 'none',
                   outline: '2px solid rgba(33, 31, 38, 0.9)',
                   outlineOffset: '1px',
                 },

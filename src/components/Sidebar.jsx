@@ -1,4 +1,6 @@
 import { useEffect, useRef, useSyncExternalStore } from 'react'
+import { NavLink } from 'react-router-dom'
+import { STRATEGIES } from '../routes'
 import './Sidebar.css'
 
 const NAV_GROUPS = [
@@ -62,7 +64,7 @@ const mobileQuery = typeof window !== 'undefined' ? window.matchMedia('(max-widt
 const subscribeMobile = (cb) => { mobileQuery?.addEventListener('change', cb); return () => mobileQuery?.removeEventListener('change', cb) }
 const getMobileSnapshot = () => mobileQuery?.matches ?? false
 
-export default function Sidebar({ expanded, onToggleExpanded, mobileOpen, onCloseMobile, suppressTransition, activeItem, onNavigate }) {
+export default function Sidebar({ expanded, onToggleExpanded, mobileOpen, onCloseMobile, suppressTransition }) {
   const sidebarRef = useRef(null)
   const isMobile = useSyncExternalStore(subscribeMobile, getMobileSnapshot)
   // Mobile drawer always renders expanded (with labels), desktop uses the expanded prop
@@ -86,12 +88,9 @@ export default function Sidebar({ expanded, onToggleExpanded, mobileOpen, onClos
     if (focusable.length) focusable[0].focus()
   }, [mobileOpen])
 
-  const handleNavClick = (itemId) => {
-    onNavigate(itemId)
+  const handleNavClick = () => {
     if (mobileOpen) onCloseMobile()
   }
-
-  const isSelected = (itemId) => activeItem === itemId
 
   return (
     <>
@@ -136,13 +135,39 @@ export default function Sidebar({ expanded, onToggleExpanded, mobileOpen, onClos
               <i className="fa-regular fa-sidebar" aria-hidden="true" />
             </button>
             <button
-              className={`sidebar__nav-btn ${showExpanded ? 'sidebar__nav-btn--expanded' : 'sidebar__nav-btn--collapsed'} ${isSelected('home') ? 'sidebar__nav-btn--selected' : ''}`}
-              aria-current={isSelected('home') ? 'page' : undefined}
-              onClick={() => handleNavClick('home')}
+              className={`sidebar__nav-btn ${showExpanded ? 'sidebar__nav-btn--expanded' : 'sidebar__nav-btn--collapsed'}`}
+              onClick={handleNavClick}
             >
-              <i className={`${isSelected('home') ? 'fa-solid' : 'fa-regular'} fa-house`} />
+              <i className="fa-regular fa-house" />
               {showExpanded && <span className="sidebar__nav-label">Home</span>}
             </button>
+          </div>
+
+          {/* Strategies */}
+          <div className="sidebar__group">
+            {showExpanded && (
+              <div className="sidebar__group-header">
+                <span className="sidebar__group-title">Strategies</span>
+                <i className="fa-solid fa-angle-up sidebar__group-chevron" />
+              </div>
+            )}
+            {STRATEGIES.map(strategy => (
+              <NavLink
+                key={strategy.id}
+                to={strategy.path}
+                className={({ isActive }) =>
+                  `sidebar__nav-btn ${showExpanded ? 'sidebar__nav-btn--expanded' : 'sidebar__nav-btn--collapsed'} ${isActive ? 'sidebar__nav-btn--selected' : ''}`
+                }
+                onClick={() => { if (mobileOpen) onCloseMobile() }}
+              >
+                {({ isActive }) => (
+                  <>
+                    <i className={isActive ? strategy.icon.replace('fa-regular', 'fa-solid') : strategy.icon} />
+                    {showExpanded && <span className="sidebar__nav-label">{strategy.shortLabel}</span>}
+                  </>
+                )}
+              </NavLink>
+            ))}
           </div>
 
           {/* Nav groups */}
@@ -157,11 +182,10 @@ export default function Sidebar({ expanded, onToggleExpanded, mobileOpen, onClos
               {group.items.map(item => (
                 <button
                   key={item.id}
-                  className={`sidebar__nav-btn ${showExpanded ? 'sidebar__nav-btn--expanded' : 'sidebar__nav-btn--collapsed'} ${isSelected(item.id) ? 'sidebar__nav-btn--selected' : ''}`}
-                  aria-current={isSelected(item.id) ? 'page' : undefined}
-                  onClick={() => handleNavClick(item.id)}
+                  className={`sidebar__nav-btn ${showExpanded ? 'sidebar__nav-btn--expanded' : 'sidebar__nav-btn--collapsed'}`}
+                  onClick={handleNavClick}
                 >
-                  <i className={`${isSelected(item.id) ? item.icon.replace('fa-regular', 'fa-solid') : item.icon}`} />
+                  <i className={item.icon} />
                   {showExpanded && <span className="sidebar__nav-label">{item.label}</span>}
                 </button>
               ))}
@@ -170,11 +194,10 @@ export default function Sidebar({ expanded, onToggleExpanded, mobileOpen, onClos
 
           {/* App settings */}
           <button
-            className={`sidebar__nav-btn ${showExpanded ? 'sidebar__nav-btn--expanded' : 'sidebar__nav-btn--collapsed'} ${isSelected('app-settings') ? 'sidebar__nav-btn--selected' : ''}`}
-            aria-current={isSelected('app-settings') ? 'page' : undefined}
-            onClick={() => handleNavClick('app-settings')}
+            className={`sidebar__nav-btn ${showExpanded ? 'sidebar__nav-btn--expanded' : 'sidebar__nav-btn--collapsed'}`}
+            onClick={handleNavClick}
           >
-            <i className={`${isSelected('app-settings') ? 'fa-solid' : 'fa-regular'} fa-gear`} />
+            <i className="fa-regular fa-gear" />
             {showExpanded && <span className="sidebar__nav-label">App settings</span>}
           </button>
         </nav>
