@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import './BulkEditActionBar.css'
 
 export default function BulkEditActionBar({ selectedCount, onClose }) {
@@ -7,7 +7,7 @@ export default function BulkEditActionBar({ selectedCount, onClose }) {
   const prevForExit = useRef(0)
 
   /* eslint-disable react-hooks/set-state-in-effect -- exit animation + count label synced from selection */
-  useEffect(() => {
+  useLayoutEffect(() => {
     const prev = prevForExit.current
     if (selectedCount > 0) {
       setExiting(false)
