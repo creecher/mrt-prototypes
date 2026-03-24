@@ -1,4 +1,12 @@
-import { Autocomplete, Avatar, Checkbox, Chip, Drawer, TextField } from '@mui/material'
+import {
+  Autocomplete,
+  Avatar,
+  Checkbox,
+  Chip,
+  Drawer,
+  TextField,
+  useMediaQuery,
+} from '@mui/material'
 import { TASK_TYPE_CHIP_STYLES, STATUS_COLORS } from '../data/taskData'
 import './FiltersDrawer.css'
 
@@ -39,11 +47,23 @@ export default function FiltersDrawer({
   activeFilterCount,
   onReset,
 }) {
+  const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
+  const slideMs = reduceMotion ? { enter: 1, exit: 1 } : { enter: 280, exit: 220 }
+
   return (
     <Drawer
       anchor="bottom"
       open={open}
       onClose={onClose}
+      transitionDuration={slideMs}
+      SlideProps={{
+        easing: reduceMotion
+          ? { enter: 'linear', exit: 'linear' }
+          : {
+              enter: 'cubic-bezier(0.22, 1, 0.36, 1)',
+              exit: 'cubic-bezier(0.4, 0, 1, 1)',
+            },
+      }}
       PaperProps={{
         className: 'filters-drawer',
       }}

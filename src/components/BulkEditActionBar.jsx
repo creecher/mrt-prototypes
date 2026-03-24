@@ -1,8 +1,42 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
 import './BulkEditActionBar.css'
 
 export default function BulkEditActionBar({ selectedCount, onClose }) {
+  const [exiting, setExiting] = useState(false)
+  const [lastNonZeroCount, setLastNonZeroCount] = useState(0)
+  const prevForExit = useRef(0)
+
+  /* eslint-disable react-hooks/set-state-in-effect -- exit animation + count label synced from selection */
+  useEffect(() => {
+    const prev = prevForExit.current
+    if (selectedCount > 0) {
+      setExiting(false)
+      setLastNonZeroCount(selectedCount)
+    } else if (prev > 0) {
+      setExiting(true)
+    }
+    prevForExit.current = selectedCount
+  }, [selectedCount])
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  const handleAnimationEnd = useCallback((e) => {
+    if (e.target !== e.currentTarget) return
+    // Don’t gate on `exiting` — a stale closure can skip cleanup. Name + target are enough.
+    if (!e.animationName.includes('bulk-edit-bar-exit')) return
+    setExiting(false)
+  }, [])
+
+  const showBar = selectedCount > 0 || exiting
+  const countShown =
+    selectedCount > 0 ? selectedCount : lastNonZeroCount
+
+  if (!showBar) return null
+
   return (
-    <div className="bulk-edit-bar">
+    <div
+      className={`bulk-edit-bar${exiting ? ' bulk-edit-bar--exiting' : ''}`}
+      onAnimationEnd={handleAnimationEnd}
+    >
       <button
         type="button"
         className="bulk-edit-bar__close-btn"
@@ -12,7 +46,7 @@ export default function BulkEditActionBar({ selectedCount, onClose }) {
         <i className="fa-regular fa-xmark" />
       </button>
       <span className="bulk-edit-bar__count">
-        {selectedCount} selected
+        {countShown} selected
       </span>
       <div className="bulk-edit-bar__buttons">
         {/* Assign to dropdown */}

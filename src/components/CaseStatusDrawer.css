@@ -406,8 +406,14 @@
   white-space: nowrap;
 }
 
-.case-status-drawer__btn-cancel:hover {
-  background: rgba(0, 0, 0, 0.04);
+@media (hover: hover) and (pointer: fine) {
+  .case-status-drawer__btn-cancel {
+    transition: background-color 0.2s ease;
+  }
+
+  .case-status-drawer__btn-cancel:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
 }
 
 .case-status-drawer__btn-update {
@@ -426,6 +432,12 @@
   white-space: nowrap;
 }
 
-.case-status-drawer__btn-update:hover {
-  background: var(--mui-palette-primary-dark, rgba(33, 31, 38, 1));
+@media (hover: hover) and (pointer: fine) {
+  .case-status-drawer__btn-update {
+    transition: background-color 0.2s ease;
+  }
+
+  .case-status-drawer__btn-update:hover {
+    background: var(--mui-palette-primary-dark, rgba(33, 31, 38, 1));
+  }
 }

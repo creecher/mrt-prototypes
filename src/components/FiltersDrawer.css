@@ -72,8 +72,14 @@
   flex-shrink: 0;
 }
 
-.filters-drawer__reset-btn:hover {
-  background: rgba(0, 0, 0, 0.04);
+@media (hover: hover) and (pointer: fine) {
+  .filters-drawer__reset-btn {
+    transition: background-color 0.2s ease;
+  }
+
+  .filters-drawer__reset-btn:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
 }
 
 .filters-drawer__close-btn {
@@ -92,8 +98,14 @@
   padding: 0;
 }
 
-.filters-drawer__close-btn:hover {
-  background: rgba(0, 0, 0, 0.04);
+@media (hover: hover) and (pointer: fine) {
+  .filters-drawer__close-btn {
+    transition: background-color 0.2s ease;
+  }
+
+  .filters-drawer__close-btn:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
 }
 
 /* --- Body --- */
@@ -212,8 +224,14 @@
   cursor: pointer;
 }
 
-.filters-drawer__option:hover {
-  background-color: var(--mui-palette-action-hover, rgba(0, 0, 0, 0.04));
+@media (hover: hover) and (pointer: fine) {
+  .filters-drawer__option {
+    transition: background-color 0.2s ease;
+  }
+
+  .filters-drawer__option:hover {
+    background-color: var(--mui-palette-action-hover, rgba(0, 0, 0, 0.04));
+  }
 }
 
 .filters-drawer__option[aria-selected='true'] {

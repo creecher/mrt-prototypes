@@ -1,14 +1,44 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
 import './BulkEditActionBar.css'
 
 export default function BulkEditDrawer({ open, selectedCount, onClose }) {
-  if (!open) return null
+  const [exiting, setExiting] = useState(false)
+  const [lastNonZeroCount, setLastNonZeroCount] = useState(0)
+  const prevOpenForExit = useRef(false)
+
+  /* eslint-disable react-hooks/set-state-in-effect -- sheet exit animation + count synced from props */
+  useEffect(() => {
+    if (open) {
+      setExiting(false)
+      setLastNonZeroCount(selectedCount)
+    } else if (prevOpenForExit.current) {
+      setExiting(true)
+    }
+    prevOpenForExit.current = open
+  }, [open, selectedCount])
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  const handleAnimationEnd = useCallback((e) => {
+    if (e.target !== e.currentTarget) return
+    if (!e.animationName.includes('bulk-edit-drawer-slide-down')) return
+    setExiting(false)
+  }, [])
+
+  const visible = open || exiting
+  if (!visible) return null
+
+  const drawerClass = exiting
+    ? 'bulk-edit-drawer bulk-edit-drawer--exiting'
+    : 'bulk-edit-drawer bulk-edit-drawer--entering'
+
+  const countShown = selectedCount > 0 ? selectedCount : lastNonZeroCount
 
   return (
-    <div className={`bulk-edit-drawer ${open ? 'bulk-edit-drawer--entering' : ''}`}>
+    <div className={drawerClass} onAnimationEnd={handleAnimationEnd}>
       {/* Header */}
       <div className="bulk-edit-drawer__header">
         <h2 className="bulk-edit-drawer__title">
-          {selectedCount} Selected
+          {countShown} Selected
         </h2>
         <button
           type="button"

@@ -596,6 +596,11 @@ export default function ColumnHidingPage() {
             TabIndicatorProps={{ sx: { backgroundColor: 'text.primary', height: 2 } }}
             sx={{
               minHeight: 36,
+              '@media (hover: hover) and (pointer: fine)': {
+                '& .MuiTab-root::after': {
+                  transition: 'opacity 0.2s ease',
+                },
+              },
               '& .MuiTabs-flexContainer': { gap: 0 },
               '& .MuiTab-root': {
                 position: 'relative',
@@ -619,7 +624,6 @@ export default function ColumnHidingPage() {
                   backgroundColor: (theme) => theme.palette.divider,
                   opacity: 0,
                   pointerEvents: 'none',
-                  transition: 'opacity 0.15s ease',
                 },
                 '&:hover:not(.Mui-selected)::after': {
                   opacity: 1,
@@ -675,7 +679,7 @@ export default function ColumnHidingPage() {
         activeFilterCount={activeFilterCount}
         onReset={handleResetFilters}
       />
-      {selectedCount > 0 && !isMobileBulkEdit && (
+      {!isMobileBulkEdit && (
         <BulkEditActionBar selectedCount={selectedCount} onClose={handleClearSelection} />
       )}
       {isMobileBulkEdit && (

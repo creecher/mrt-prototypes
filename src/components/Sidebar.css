@@ -7,7 +7,7 @@
   padding: 44px 16px 16px;
   overflow-y: auto;
   overflow-x: hidden;
-  transition: width 0.2s ease;
+  /* Width changes are layout — no transition (see motion guidelines). */
   position: relative;
 }
 
@@ -117,12 +117,17 @@
   cursor: pointer;
   border-radius: 8px;
   font-family: inherit;
-  transition: background 0.15s ease;
   flex-shrink: 0;
 }
 
-.sidebar__nav-btn:hover {
-  background: var(--mui-palette-action-hover);
+@media (hover: hover) and (pointer: fine) {
+  .sidebar__nav-btn {
+    transition: background-color 0.2s ease;
+  }
+
+  .sidebar__nav-btn:hover {
+    background: var(--mui-palette-action-hover);
+  }
 }
 
 .sidebar__nav-btn--selected {
@@ -247,7 +252,7 @@
     bottom: 0;
     z-index: 1200;
     transform: translateX(-100%);
-    transition: transform 0.25s ease, width 0.2s ease;
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
     /* Mobile sidebar always shows expanded with white background */
     width: 290px !important;
     align-items: flex-start !important;
@@ -270,11 +275,21 @@
     background: rgba(0, 0, 0, 0.5);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.25s ease;
+    transition: opacity 0.22s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .sidebar-backdrop--visible {
     opacity: 1;
     pointer-events: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sidebar {
+      transition-duration: 0.01ms;
+    }
+
+    .sidebar-backdrop {
+      transition-duration: 0.01ms;
+    }
   }
 }

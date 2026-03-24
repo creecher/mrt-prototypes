@@ -1,4 +1,4 @@
-import { Drawer } from '@mui/material'
+import { Drawer, useMediaQuery } from '@mui/material'
 import './CaseStatusDrawer.css'
 
 const TIMELINE_ENTRIES = [
@@ -26,11 +26,23 @@ const OTHER_REFERRALS = [
 ]
 
 export default function CaseStatusDrawer({ open, onClose }) {
+  const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
+  const slideMs = reduceMotion ? { enter: 1, exit: 1 } : { enter: 280, exit: 220 }
+
   return (
     <Drawer
       anchor="right"
       open={open}
       onClose={onClose}
+      transitionDuration={slideMs}
+      SlideProps={{
+        easing: reduceMotion
+          ? { enter: 'linear', exit: 'linear' }
+          : {
+              enter: 'cubic-bezier(0.22, 1, 0.36, 1)',
+              exit: 'cubic-bezier(0.4, 0, 1, 1)',
+            },
+      }}
       PaperProps={{
         className: 'case-status-drawer',
       }}
