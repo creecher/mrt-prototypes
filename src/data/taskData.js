@@ -42,7 +42,7 @@ export const TASK_DATA = [
   {
     id: 'TSK-006',
     task: 'Complete initial assessment documentation',
-    taskType: 'Clinical Assessment',
+    taskType: 'Recup Referral Coordinator',
     dueDate: '2025-05-20',
     assignees: ['Alex R.', 'Sam T.'],
     taskStatus: 'Not started',
@@ -50,7 +50,7 @@ export const TASK_DATA = [
   {
     id: 'TSK-007',
     task: 'Schedule follow-up evaluation meeting',
-    taskType: 'Clinical Assessment',
+    taskType: 'Recup Referral Coordinator',
     dueDate: '2025-06-18',
     assignees: ['Jordan L.'],
     taskStatus: 'Not started',
@@ -58,7 +58,7 @@ export const TASK_DATA = [
   {
     id: 'TSK-008',
     task: 'Review and approve treatment plan',
-    taskType: 'Treatment Planning',
+    taskType: 'Recup Referral Coordinator',
     dueDate: '2025-06-12',
     assignees: ['Dana K.'],
     taskStatus: 'In progress',
@@ -74,7 +74,7 @@ export const TASK_DATA = [
   {
     id: 'TSK-010',
     task: 'Coordinate transportation arrangements',
-    taskType: 'Intake Coordinator',
+    taskType: 'Recup Referral Coordinator',
     dueDate: '2025-06-08',
     assignees: ['Sam T.'],
     taskStatus: 'Not started',
@@ -82,7 +82,7 @@ export const TASK_DATA = [
   {
     id: 'TSK-011',
     task: 'Obtain signed consent forms',
-    taskType: 'Intake Coordinator',
+    taskType: 'Recup Referral Coordinator',
     dueDate: '2025-06-05',
     assignees: ['Alex R.'],
     taskStatus: 'In progress',
@@ -98,7 +98,7 @@ export const TASK_DATA = [
   {
     id: 'TSK-013',
     task: 'Submit prior authorization request',
-    taskType: 'Treatment Planning',
+    taskType: 'Recup Referral Coordinator',
     dueDate: '2025-05-30',
     assignees: ['Dana K.'],
     taskStatus: 'Not started',
@@ -106,7 +106,7 @@ export const TASK_DATA = [
   {
     id: 'TSK-014',
     task: 'Prepare discharge summary report',
-    taskType: 'Clinical Assessment',
+    taskType: 'Recup Referral Coordinator',
     dueDate: '2025-06-25',
     assignees: ['Sam T.', 'Maria S.'],
     taskStatus: 'Not started',
@@ -114,7 +114,7 @@ export const TASK_DATA = [
   {
     id: 'TSK-015',
     task: 'Follow up on missing lab results',
-    taskType: 'Clinical Assessment',
+    taskType: 'Recup Referral Coordinator',
     dueDate: '2025-06-01',
     assignees: ['Alex R.'],
     taskStatus: 'In progress',

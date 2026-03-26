@@ -1,6 +1,7 @@
 .app-shell {
   display: grid;
   height: 100vh;
+  padding-top: env(safe-area-inset-top, 0px);
   grid-template-areas:
     "sidebar header"
     "sidebar content";
@@ -15,7 +16,7 @@
 }
 
 .app-shell--expanded {
-  grid-template-columns: 180px 1fr;
+  grid-template-columns: 200px 1fr;
 }
 
 .app-shell--collapsed {

@@ -1,3 +1,13 @@
+html {
+  /* Ensure the gradient fills behind the Dynamic Island / safe area */
+  background: linear-gradient(
+    135deg,
+    var(--mui-palette-background-gradientStop1, #FBD9DE),
+    var(--mui-palette-background-gradientStop2, #E0E1FF),
+    var(--mui-palette-background-gradientStop3, #E8E3D9)
+  );
+}
+
 body {
   margin: 0;
 }

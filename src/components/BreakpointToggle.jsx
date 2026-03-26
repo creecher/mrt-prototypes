@@ -3,6 +3,21 @@ import './BreakpointToggle.css'
 
 const STORAGE_KEY = 'bp-toggle-compact'
 
+/** Hide the dev overlay on real phones/tablets; keep it on desktop (including DevTools device mode only when pointer stays fine). */
+function isMobileDevice() {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') return false
+  try {
+    if (window.matchMedia('(pointer: coarse)').matches) return true
+  } catch {
+    /* ignore */
+  }
+  // iPadOS “desktop” Safari: Mac UA but touch screen
+  if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) return true
+  const ua = navigator.userAgent || ''
+  if (/Mobi|Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua)) return true
+  return false
+}
+
 const BREAKPOINTS = [
   { label: 'xs', min: 0, max: 599 },
   { label: 'sm', min: 600, max: 899 },
@@ -32,9 +47,26 @@ function writeCompactPreference(compact) {
 }
 
 export default function BreakpointToggle() {
-  const [width, setWidth] = useState(window.innerWidth)
-  const [active, setActive] = useState(() => getBreakpoint(window.innerWidth))
-  const [compact, setCompact] = useState(readCompactPreference)
+  const [hideOnDevice, setHideOnDevice] = useState(() =>
+    typeof window !== 'undefined' ? isMobileDevice() : false
+  )
+  const [width, setWidth] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 0
+  )
+  const [active, setActive] = useState(() =>
+    typeof window !== 'undefined' ? getBreakpoint(window.innerWidth) : 'xs'
+  )
+  const [compact, setCompact] = useState(() =>
+    typeof window !== 'undefined' ? readCompactPreference() : false
+  )
+
+  useEffect(() => {
+    const mq = window.matchMedia('(pointer: coarse)')
+    const syncDevice = () => setHideOnDevice(isMobileDevice())
+    syncDevice()
+    mq.addEventListener('change', syncDevice)
+    return () => mq.removeEventListener('change', syncDevice)
+  }, [])
 
   useEffect(() => {
     const handleResize = () => {
@@ -45,6 +77,8 @@ export default function BreakpointToggle() {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
+
+  if (hideOnDevice) return null
 
   const toggleCompact = () => {
     setCompact((prev) => {

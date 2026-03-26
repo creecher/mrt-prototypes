@@ -28,7 +28,7 @@ import RightSidebar from '../components/RightSidebar'
 import FiltersDrawer from '../components/FiltersDrawer'
 import BulkEditActionBar from '../components/BulkEditActionBar'
 import BulkEditDrawer from '../components/BulkEditDrawer'
-import './ColumnHidingPage.css'
+import './ColumnPinningPage.css'
 
 const TOOLBAR_CONTROL_BG = 'var(--mui-palette-background-paperElevation3, white)'
 const TOOLBAR_CONTROL_RADIUS = '8px'
@@ -36,9 +36,9 @@ const TOOLBAR_CONTROL_SHADOW =
   '0px 0px 0px 1px var(--mui-palette-component-input-dividerDefault, rgba(20,0,53,0.15)), 0px 1px 3px 0px rgba(33,31,38,0.1), 0px 1px 2px -1px rgba(33,31,38,0.1)'
 const SHADOW_EDGE_GUTTER = '2px'
 
-/** White card wrapping only the data rows (tbody). thead sits outside on the page background. */
 const TABLE_CARD_SHADOW =
   '0 0 0 1px rgba(32, 0, 56, 0.10), 0 1px 3px 0 rgba(33, 31, 38, 0.10), 0 1px 2px -1px rgba(33, 31, 38, 0.10)'
+
 
 function FaSearchIcon() {
   return (
@@ -59,7 +59,6 @@ function FaCloseIcon() {
 }
 
 function FaViewColumnIcon() {
-  // Matches the Font Awesome glyph name seen in the Figma spec ("columns-3").
   return (
     <i
       className="fa-regular fa-columns-3"
@@ -85,13 +84,6 @@ function isOverdue(dateStr) {
   return new Date(dateStr + 'T00:00:00') < new Date()
 }
 
-function getVisibilityForBreakpoint(isMd, isLg) {
-  return {
-    taskType: isMd,
-    assignees: isLg,
-  }
-}
-
 const PAGE_TABS = [
   { value: 'tasks', icon: 'fa-regular fa-list-check', label: 'Tasks' },
   { value: 'notes', icon: 'fa-regular fa-memo-pad', label: 'Notes' },
@@ -100,26 +92,17 @@ const PAGE_TABS = [
   { value: 'team', icon: 'fa-regular fa-people-group', label: 'Team' },
 ]
 
-export default function ColumnHidingPage() {
+export default function ColumnPinningPage() {
   const theme = useTheme()
-  const isMd = useMediaQuery('(min-width: 900px)')
-  const isLg = useMediaQuery('(min-width: 1200px)')
-  /** XS–MD: compact toolbar (select tabs, icon filters, full-width search row); LG+ gets full controls */
   const isCompactToolbar = useMediaQuery('(max-width: 1199px)')
-  /** Must match theme breakpoint `sm` (600px) so Tabs vs section Select switch aligns with MUI/CSS */
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  /** SM/XS: bulk edit uses bottom sheet; MD+ uses floating bar */
   const isMobileBulkEdit = useMediaQuery(theme.breakpoints.down('md'))
 
-  const [columnVisibility, setColumnVisibility] = useState(() =>
-    getVisibilityForBreakpoint(isMd, isLg)
-  )
   const [rowSelection, setRowSelection] = useState({})
   const [tabValue, setTabValue] = useState('all')
   const [activeTab, setActiveTab] = useState('tasks')
   const [filtersOpen, setFiltersOpen] = useState(false)
 
-  // Filter state (drives bottom drawer at compact breakpoints)
   const [filterTaskTypes, setFilterTaskTypes] = useState([])
   const [filterAssignees, setFilterAssignees] = useState([])
   const [filterStatuses, setFilterStatuses] = useState([])
@@ -171,20 +154,16 @@ export default function ColumnHidingPage() {
     }
   }, [updateFades, isMobile])
 
-  useEffect(() => {
-    setColumnVisibility(getVisibilityForBreakpoint(isMd, isLg))
-  }, [isMd, isLg])
-
   const columns = useMemo(
     () => [
       {
         accessorKey: 'task',
         header: 'Task',
         enableHiding: false,
-        size: 221,
+        size: 250,
         grow: true,
         Cell: ({ cell }) => (
-          <span className="column-hiding-page__task-name">
+          <span className="column-pinning-page__task-name">
             {cell.getValue()}
           </span>
         ),
@@ -197,7 +176,7 @@ export default function ColumnHidingPage() {
           const style = TASK_TYPE_CHIP_STYLES['Recup Referral Coordinator']
           return (
             <span
-              className="column-hiding-page__chip"
+              className="column-pinning-page__chip"
               style={{
                 backgroundColor: style.bg,
                 color: style.color,
@@ -213,12 +192,12 @@ export default function ColumnHidingPage() {
       {
         accessorKey: 'dueDate',
         header: 'Due date',
-        size: 221,
+        size: 150,
         Cell: ({ cell }) => {
           const value = cell.getValue()
           const overdue = isOverdue(value)
           return (
-            <span className={`column-hiding-page__date ${overdue ? 'column-hiding-page__date--overdue' : ''}`}>
+            <span className={`column-pinning-page__date ${overdue ? 'column-pinning-page__date--overdue' : ''}`}>
               {overdue && <i className="fa-solid fa-alarm-clock" />}
               {formatDate(value)}
             </span>
@@ -228,15 +207,15 @@ export default function ColumnHidingPage() {
       {
         accessorKey: 'assignees',
         header: 'Assignee',
-        size: 221,
+        size: 180,
         enableSorting: false,
         Cell: ({ cell }) => {
           const assignees = cell.getValue()
           return (
-            <div className="column-hiding-page__assignees-cell">
+            <div className="column-pinning-page__assignees-cell">
               <AvatarGroup
                 max={3}
-                className="column-hiding-page__assignees-group"
+                className="column-pinning-page__assignees-group"
                 sx={{
                   '& .MuiAvatar-root': {
                     width: 28,
@@ -261,7 +240,7 @@ export default function ColumnHidingPage() {
       {
         accessorKey: 'taskStatus',
         header: 'Task status',
-        size: 221,
+        size: 180,
         Cell: ({ cell }) => {
           const raw = cell.getValue()
           const value =
@@ -274,7 +253,7 @@ export default function ColumnHidingPage() {
               size="small"
               tabIndex={-1}
               disableRipple
-              className="column-hiding-page__status-button"
+              className="column-pinning-page__status-button"
               endIcon={
                 <i
                   className="fa-solid fa-angles-up-down"
@@ -304,20 +283,6 @@ export default function ColumnHidingPage() {
                 justifyContent: 'flex-start',
                 boxShadow: TOOLBAR_CONTROL_SHADOW,
                 pointerEvents: 'none',
-                '& .MuiButton-label': {
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'flex-start',
-                  flex: 1,
-                  minWidth: 0,
-                  fontFamily: 'Figtree, sans-serif',
-                  fontSize: '12px',
-                  fontStyle: 'normal',
-                  fontWeight: 600,
-                  letterSpacing: '0.12px',
-                  lineHeight: '20px',
-                  textAlign: 'left',
-                },
                 '& .MuiButton-endIcon': {
                   marginLeft: 'auto',
                 },
@@ -328,12 +293,12 @@ export default function ColumnHidingPage() {
                 },
               }}
             >
-              <span className="column-hiding-page__status-leading">
+              <span className="column-pinning-page__status-leading">
                 <span
-                  className="column-hiding-page__status-dot"
+                  className="column-pinning-page__status-dot"
                   style={{ backgroundColor: color }}
                 />
-                <span className="column-hiding-page__status-label">{value}</span>
+                <span className="column-pinning-page__status-label">{value}</span>
               </span>
             </Button>
           )
@@ -346,26 +311,25 @@ export default function ColumnHidingPage() {
   const table = useMaterialReactTable({
     columns,
     data: filteredData,
-    // Grid layout: checkbox column stays narrow (grow: false); Task and other
-    // columns use flex so extra width goes to content columns — not empty space
-    // beside the checkbox when only one data column is visible.
-    layoutMode: 'grid',
     enableRowSelection: true,
+    enableColumnPinning: true,
+    enableColumnOrdering: false,
+    enableColumnResizing: false,
+    enableStickyHeader: true,
+    mrtTheme: {
+      baseBackgroundColor: '#FFF',
+      selectedRowBackgroundColor: '#EDECF0',
+    },
     initialState: {
-      // MRT_GlobalFilterTextField is wrapped in a Collapse that is controlled
-      // by `showGlobalFilter`. Default is false, which makes the search field
-      // not render in the DOM.
       showGlobalFilter: true,
+      density: 'comfortable',
     },
     icons: {
-      // Force MRT toolbar/input icons to Font Awesome 7.
       SearchIcon: FaSearchIcon,
       CloseIcon: FaCloseIcon,
       ViewColumnIcon: FaViewColumnIcon,
     },
     muiSearchTextFieldProps: {
-      // MRT_GlobalFilterTextField renders an endAdornment "X" by default.
-      // Override both start/end adornments to match the Figma spec.
       InputProps: {
         startAdornment: (
           <InputAdornment position="start">
@@ -374,7 +338,7 @@ export default function ColumnHidingPage() {
               style={{
                 fontSize: 14,
                 color: 'var(--mui-palette-text-secondary)',
-                marginRight: 2, // 2px gap between icon and placeholder
+                marginRight: 2,
               }}
             />
           </InputAdornment>
@@ -382,8 +346,7 @@ export default function ColumnHidingPage() {
         endAdornment: null,
       },
     },
-    state: { columnVisibility, rowSelection },
-    onColumnVisibilityChange: setColumnVisibility,
+    state: { rowSelection },
     onRowSelectionChange: setRowSelection,
     getRowId: (row) => row.id,
     renderTopToolbar: () => (
@@ -396,6 +359,7 @@ export default function ColumnHidingPage() {
         activeFilterCount={activeFilterCount}
       />
     ),
+    renderToolbarInternalActions: () => null,
     enableBottomToolbar: false,
     positionToolbarAlertBanner: 'none',
     enableGlobalFilter: true,
@@ -413,25 +377,22 @@ export default function ColumnHidingPage() {
         display: 'flex',
         flexDirection: 'column',
         gap: '16px',
-        // Leave room so control/table shadows are not cut off at the edges.
-        paddingInline: SHADOW_EDGE_GUTTER,
+        paddingInline: 0,
         overflow: 'visible',
-        // Prevent wide tables from expanding the grid past the viewport (min-content).
         minWidth: 0,
         maxWidth: '100%',
       },
     },
     muiTableContainerProps: {
-      className: 'column-hiding-page__table-scroll',
+      className: 'column-pinning-page__table-scroll',
       sx: {
         backgroundColor: 'transparent',
         boxShadow: 'none',
         maxWidth: '100%',
+        maxHeight: '70vh',
         overflowX: 'auto',
         WebkitOverflowScrolling: 'touch',
-        // Padding gives the tbody card shadow room to render inside the scroll area
-        // without being clipped by overflow-x: auto.
-        padding: '0 4px 5px',
+        padding: '0 0 5px',
       },
     },
     muiTableProps: {
@@ -439,18 +400,15 @@ export default function ColumnHidingPage() {
         borderCollapse: 'separate',
         borderSpacing: 0,
         width: '100%',
+        minWidth: 900,
       },
     },
-    // MRT defaults thead row to mrtTheme.baseBackgroundColor (page grey). We want headers
-    // flush with the surrounding card like the spec (no filled header band).
     muiTableHeadRowProps: {
       sx: {
         backgroundColor: 'transparent',
         boxShadow: 'none',
       },
     },
-    // thead/tbody use default display (table-header-group / table-row-group) so
-    // column widths stay aligned — avoid tbody `display: block` + row `display: table`.
     muiTableBodyProps: {
       sx: {
         backgroundColor: '#FFF',
@@ -466,7 +424,6 @@ export default function ColumnHidingPage() {
         letterSpacing: 0,
         lineHeight: '20px',
         color: 'var(--mui-palette-text-secondary)',
-        backgroundColor: 'transparent',
         height: 44,
         padding: '0 16px',
         borderBottom: 'none',
@@ -485,32 +442,13 @@ export default function ColumnHidingPage() {
       },
     },
     muiTableBodyRowProps: {
-      sx: (theme) => ({
+      sx: {
         backgroundColor: '#FFF',
         boxShadow: 'none',
-        '&:hover > td': {
-          backgroundColor: theme.palette.action.hover,
-        },
-        // MUI uses a `td::after` overlay on hover/selected that can stack on top
-        // of our `td` background. Disable it so the action colors look correct.
-        '&:hover td:after': {
-          backgroundColor: 'transparent',
-          opacity: 0,
-        },
-        '&.Mui-selected > td': {
-          backgroundColor: theme.palette.action.selected,
-        },
-        '&.Mui-selected:hover > td': {
-          backgroundColor: theme.palette.action.selected,
-        },
-        '&.Mui-selected td:after': {
-          backgroundColor: 'transparent',
-          opacity: 0,
-        },
         '&:last-child td': {
           borderBottom: 'none',
         },
-      }),
+      },
     },
     muiSelectCheckboxProps: {
       sx: {
@@ -520,29 +458,29 @@ export default function ColumnHidingPage() {
   })
 
   const fadeClass = showLeftFade && showRightFade
-    ? 'column-hiding-page__tabs-scroller--fade-both'
+    ? 'column-pinning-page__tabs-scroller--fade-both'
     : showLeftFade
-      ? 'column-hiding-page__tabs-scroller--fade-left'
+      ? 'column-pinning-page__tabs-scroller--fade-left'
       : showRightFade
-        ? 'column-hiding-page__tabs-scroller--fade-right'
+        ? 'column-pinning-page__tabs-scroller--fade-right'
         : ''
 
   return (
-    <div className="column-hiding-page">
-      <div className="column-hiding-page__main">
-      <Typography variant="h4" component="h1" color="text.primary" className="column-hiding-page__page-h1" sx={{ margin: 0 }}>
-        Column Hiding
+    <div className="column-pinning-page">
+      <div className="column-pinning-page__main">
+      <Typography variant="h4" component="h1" color="text.primary" className="column-pinning-page__page-h1" sx={{ margin: 0 }}>
+        Column Pinning
       </Typography>
 
-      {/* Page-level tabs (above table card) */}
+      {/* Page-level tabs */}
       {isMobile ? (
-        <div className="column-hiding-page__page-section-select-shell">
-        <FormControl fullWidth size="small" className="column-hiding-page__page-section-select">
-          <InputLabel id="page-section-label" sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
+        <div className="column-pinning-page__page-section-select-shell">
+        <FormControl fullWidth size="small" className="column-pinning-page__page-section-select">
+          <InputLabel id="pinning-page-section-label" sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
             Section
           </InputLabel>
           <Select
-            labelId="page-section-label"
+            labelId="pinning-page-section-label"
             value={activeTab}
             onChange={(e) => setActiveTab(e.target.value)}
             IconComponent={() => (
@@ -592,7 +530,7 @@ export default function ColumnHidingPage() {
         </FormControl>
         </div>
       ) : (
-        <div className="column-hiding-page__tabs-bar">
+        <div className="column-pinning-page__tabs-bar">
           <Tabs
             value={activeTab}
             onChange={(e, v) => setActiveTab(v)}
@@ -618,7 +556,6 @@ export default function ColumnHidingPage() {
                 lineHeight: '24px',
                 color: 'text.secondary',
                 '&.Mui-selected': { color: 'text.primary' },
-                // Hover: same 2px bottom line as the active indicator, divider.default
                 '&::after': {
                   content: '""',
                   position: 'absolute',
@@ -638,7 +575,7 @@ export default function ColumnHidingPage() {
             slotProps={{
               scroller: {
                 ref: scrollerRef,
-                className: `column-hiding-page__tabs-scroller ${fadeClass}`,
+                className: `column-pinning-page__tabs-scroller ${fadeClass}`,
               },
             }}
           >
@@ -647,7 +584,7 @@ export default function ColumnHidingPage() {
                 key={t.value}
                 value={t.value}
                 label={
-                  <span className="column-hiding-page__tab-label">
+                  <span className="column-pinning-page__tab-label">
                     <i className={t.icon} />
                     {t.label}
                   </span>
@@ -659,11 +596,11 @@ export default function ColumnHidingPage() {
       )}
 
       {activeTab === 'tasks' ? (
-        <div className="column-hiding-page__table-container">
+        <div className="column-pinning-page__table-container">
           <MaterialReactTable table={table} />
         </div>
       ) : (
-        <div className="column-hiding-page__tab-placeholder">
+        <div className="column-pinning-page__tab-placeholder">
           {PAGE_TABS.find((t) => t.value === activeTab)?.label}
         </div>
       )}
@@ -703,20 +640,20 @@ function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar, onFilte
     <div
       className={
         isCompactToolbar
-          ? 'column-hiding-page__toolbar-wrapper column-hiding-page__toolbar-wrapper--compact'
-          : 'column-hiding-page__toolbar-wrapper'
+          ? 'column-pinning-page__toolbar-wrapper column-pinning-page__toolbar-wrapper--compact'
+          : 'column-pinning-page__toolbar-wrapper'
       }
       style={{ paddingLeft: 0, paddingRight: 0 }}
     >
       {/* Row 1: Page header */}
-      <div className="column-hiding-page__header">
-        <h2 className="column-hiding-page__title">
-          <span className="column-hiding-page__title-avatar" aria-hidden="true">
-            <i className="fa-solid fa-list-check column-hiding-page__title-avatar-icon" />
+      <div className="column-pinning-page__header">
+        <h2 className="column-pinning-page__title">
+          <span className="column-pinning-page__title-avatar" aria-hidden="true">
+            <i className="fa-solid fa-thumbtack column-pinning-page__title-avatar-icon" />
           </span>
-          <span className="column-hiding-page__title-text">Tasks</span>
+          <span className="column-pinning-page__title-text">Tasks</span>
         </h2>
-        <div className="column-hiding-page__header-buttons">
+        <div className="column-pinning-page__header-buttons">
           <Button
             variant="contained"
             size="small"
@@ -738,17 +675,17 @@ function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar, onFilte
                 marginRight: '4px',
               },
             }}
-            startIcon={<i className="fa-regular fa-plus column-hiding-page__add-icon" />}
+            startIcon={<i className="fa-regular fa-plus column-pinning-page__add-icon" />}
           >
             Add
           </Button>
         </div>
       </div>
 
-      {/* Row 2: All/Groups (compact) or toggle (wide) */}
-      <div className="column-hiding-page__toolbar-grouping-row" style={{ paddingLeft: 0, paddingRight: 0 }}>
+      {/* Row 2: All/Groups */}
+      <div className="column-pinning-page__toolbar-grouping-row" style={{ paddingLeft: 0, paddingRight: 0 }}>
         {isCompactToolbar ? (
-          <FormControl size="small" className="column-hiding-page__toolbar-grouping-select">
+          <FormControl size="small" className="column-pinning-page__toolbar-grouping-select">
             <Select
               value={tabValue}
               onChange={(event) => onTabChange(event.target.value)}
@@ -837,14 +774,6 @@ function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar, onFilte
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                '& .MuiToggleButton-label': {
-                  fontFamily: 'Figtree, sans-serif',
-                  fontSize: '12px',
-                  fontStyle: 'normal',
-                  fontWeight: 600,
-                  letterSpacing: '0.12px',
-                  lineHeight: '20px',
-                },
               },
             }}
           >
@@ -859,11 +788,11 @@ function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar, onFilte
       </div>
 
       {/* Row 3: Search + filters */}
-      <div className="column-hiding-page__toolbar">
-        <div className="column-hiding-page__toolbar-search">
+      <div className="column-pinning-page__toolbar">
+        <div className="column-pinning-page__toolbar-search">
           <MRT_GlobalFilterTextField table={table} />
         </div>
-        <div className="column-hiding-page__toolbar-filters">
+        <div className="column-pinning-page__toolbar-filters">
           {isCompactToolbar && (
             <Badge
               variant="dot"
@@ -927,14 +856,6 @@ function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar, onFilte
               minWidth: 'auto',
               lineHeight: '20px',
               height: 28,
-              '& .MuiButton-label': {
-                fontFamily: 'Figtree, sans-serif',
-                fontSize: '12px',
-                fontStyle: 'normal',
-                fontWeight: 600,
-                letterSpacing: '0.12px',
-                lineHeight: '20px',
-              },
               boxShadow: TOOLBAR_CONTROL_SHADOW,
               '&:hover': { borderColor: 'transparent', backgroundColor: TOOLBAR_CONTROL_BG, boxShadow: TOOLBAR_CONTROL_SHADOW },
               '& .MuiButton-endIcon': { marginLeft: '6px' },
@@ -968,14 +889,6 @@ function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar, onFilte
               minWidth: 'auto',
               lineHeight: '20px',
               height: 28,
-              '& .MuiButton-label': {
-                fontFamily: 'Figtree, sans-serif',
-                fontSize: '12px',
-                fontStyle: 'normal',
-                fontWeight: 600,
-                letterSpacing: '0.12px',
-                lineHeight: '20px',
-              },
               boxShadow: TOOLBAR_CONTROL_SHADOW,
               '&:hover': { borderColor: 'transparent', backgroundColor: TOOLBAR_CONTROL_BG, boxShadow: TOOLBAR_CONTROL_SHADOW },
               '& .MuiButton-endIcon': { marginLeft: '6px' },
@@ -1009,14 +922,6 @@ function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar, onFilte
               minWidth: 'auto',
               lineHeight: '20px',
               height: 28,
-              '& .MuiButton-label': {
-                fontFamily: 'Figtree, sans-serif',
-                fontSize: '12px',
-                fontStyle: 'normal',
-                fontWeight: 600,
-                letterSpacing: '0.12px',
-                lineHeight: '20px',
-              },
               boxShadow: TOOLBAR_CONTROL_SHADOW,
               '&:hover': { borderColor: 'transparent', backgroundColor: TOOLBAR_CONTROL_BG, boxShadow: TOOLBAR_CONTROL_SHADOW },
               '& .MuiButton-endIcon': { marginLeft: '6px' },
@@ -1059,14 +964,6 @@ function CustomToolbar({ table, tabValue, onTabChange, isCompactToolbar, onFilte
               minWidth: 'auto',
               lineHeight: '20px',
               height: 28,
-              '& .MuiButton-label': {
-                fontFamily: 'Figtree, sans-serif',
-                fontSize: '12px',
-                fontStyle: 'normal',
-                fontWeight: 600,
-                letterSpacing: '0.12px',
-                lineHeight: '20px',
-              },
               opacity: 1,
               '&.Mui-disabled': { color: 'var(--mui-palette-text-secondary)', opacity: 1 },
               '&:hover': { backgroundColor: 'transparent' },

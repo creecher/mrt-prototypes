@@ -103,23 +103,24 @@ export default function Sidebar({ expanded, onToggleExpanded, mobileOpen, onClos
         ref={sidebarRef}
         className={`sidebar ${showExpanded ? 'sidebar--expanded' : 'sidebar--collapsed'} ${mobileOpen ? 'sidebar--mobile-open' : ''} ${suppressTransition ? 'sidebar--no-transition' : ''}`}
       >
-        {mobileOpen && (
-          <button
-            className="sidebar__close-btn"
-            onClick={onCloseMobile}
-            aria-label="Close navigation menu"
-          >
-            <i className="fa-solid fa-xmark" />
-          </button>
-        )}
-
-        {/* Logo */}
-        <div className="sidebar__logo">
-          <div className="sidebar__logo-icon">
-            <i className="fa-solid fa-flask" />
+        <div className="sidebar__top">
+          {/* Logo */}
+          <div className="sidebar__logo">
+            <div className="sidebar__logo-icon">
+              <i className="fa-solid fa-flask" />
+            </div>
+            {showExpanded && (
+              <span className="sidebar__logo-text">App Name</span>
+            )}
           </div>
-          {showExpanded && (
-            <span className="sidebar__logo-text">App Name</span>
+          {mobileOpen && (
+            <button
+              className="sidebar__close-btn"
+              onClick={onCloseMobile}
+              aria-label="Close navigation menu"
+            >
+              <i className="fa-regular fa-xmark" />
+            </button>
           )}
         </div>
 
@@ -148,7 +149,7 @@ export default function Sidebar({ expanded, onToggleExpanded, mobileOpen, onClos
             {showExpanded && (
               <div className="sidebar__group-header">
                 <span className="sidebar__group-title">Strategies</span>
-                <i className="fa-solid fa-angle-up sidebar__group-chevron" />
+                <i className="fa-regular fa-angle-up sidebar__group-chevron" />
               </div>
             )}
             {STRATEGIES.map(strategy => (
@@ -176,7 +177,7 @@ export default function Sidebar({ expanded, onToggleExpanded, mobileOpen, onClos
               {showExpanded && (
                 <div className="sidebar__group-header">
                   <span className="sidebar__group-title">{group.label}</span>
-                  <i className="fa-solid fa-angle-up sidebar__group-chevron" />
+                  <i className="fa-regular fa-angle-up sidebar__group-chevron" />
                 </div>
               )}
               {group.items.map(item => (

@@ -9,10 +9,22 @@
   overflow-x: hidden;
   /* Width changes are layout — no transition (see motion guidelines). */
   position: relative;
+  min-height: 0;
+  font-weight: 500;
+}
+
+/* Logo + mobile close — header row on small screens; only nav scrolls */
+.sidebar__top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .sidebar--expanded {
-  width: 180px;
+  width: 200px;
   align-items: flex-start;
 }
 
@@ -29,6 +41,7 @@
   padding: 0 4px;
   flex-shrink: 0;
   position: relative;
+  min-width: 0;
 }
 
 .sidebar__logo-icon {
@@ -47,7 +60,7 @@
 
 .sidebar__logo-text {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 24px;
   color: var(--mui-palette-text-secondary);
   white-space: nowrap;
@@ -86,24 +99,32 @@
 .sidebar__group-header {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   padding: 4px 8px;
   border-radius: 8px;
   cursor: default;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .sidebar__group-title {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   line-height: 20px;
   color: var(--mui-palette-text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
 }
 
 .sidebar__group-chevron {
-  font-size: 8px;
+  /* Match .sidebar__nav-btn--expanded i */
+  width: 16px;
+  font-size: 14px;
+  text-align: center;
+  flex-shrink: 0;
   color: var(--mui-palette-text-secondary);
 }
 
@@ -123,6 +144,7 @@ a.sidebar__nav-btn {
   cursor: pointer;
   border-radius: 8px;
   font-family: inherit;
+  font-weight: 500;
   flex-shrink: 0;
 }
 
@@ -153,8 +175,8 @@ a.sidebar__nav-btn {
 }
 
 .sidebar__nav-btn--expanded i {
-  width: 15px;
-  font-size: 12px;
+  width: 16px;
+  font-size: 14px;
   text-align: center;
   color: var(--mui-palette-text-secondary);
   flex-shrink: 0;
@@ -165,8 +187,8 @@ a.sidebar__nav-btn {
 }
 
 .sidebar__nav-label {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   line-height: 20px;
   color: var(--mui-palette-text-secondary);
   white-space: nowrap;
@@ -218,11 +240,8 @@ a.sidebar__nav-btn {
   display: none;
 }
 
-/* ── Mobile overlay close button ───────────────── */
+/* ── Mobile overlay close button (positioned in .sidebar__top on mobile) ───────────────── */
 .sidebar__close-btn {
-  position: absolute;
-  top: 18px;
-  right: 16px;
   width: 28px;
   height: 28px;
   display: flex;
@@ -234,6 +253,7 @@ a.sidebar__nav-btn {
   cursor: pointer;
   color: var(--mui-palette-text-secondary);
   padding: 4px;
+  flex-shrink: 0;
 }
 
 .sidebar__close-btn i {
@@ -263,6 +283,32 @@ a.sidebar__nav-btn {
     width: 290px !important;
     align-items: flex-start !important;
     background: var(--mui-palette-background-default);
+    /* Only the nav list scrolls; header (logo + close) stays fixed */
+    overflow: hidden;
+    padding: 0;
+    gap: 0;
+  }
+
+  .sidebar__top {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 16px 12px;
+    background: var(--mui-palette-background-default);
+  }
+
+  .sidebar__logo {
+    flex: 1;
+    padding: 0 4px;
+  }
+
+  .sidebar__nav {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 20px 16px;
   }
 
   .sidebar__toggle-btn {
